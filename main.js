@@ -21,43 +21,63 @@ let producto13 = new Productos("Rosemary", 24000)
 let producto14 = new Productos("Spearmint", 37332)
 let producto15 = new Productos("Tea Tree", 30666)
 
+let lista = [producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8, producto9, producto10, producto11, producto12, producto13, producto14, producto15]
+const precios = []
+let autenticado = false
 
-function sumar(precio) {
-    const total = precio.reduce((acumulador, elemento) => acumulador + elemento, 0)
-    console.log(total)
+function autenticador() {
+    let usuario = prompt("Ingresa tu usuario:")
+
+    if (usuario === null || usuario === undefined) {
+        alert("El usuario está vacío")
+    }
+    if (usuario === "claudia rolack" && intentos <= 3) {
+        alert("Bienvenida " + usuario)
+        autenticado = true
+    } else {
+        alert("No se reconoce al usuario: " + usuario)
+        intentos++
+        if (intentos > 3) {
+            alert("Vuelve a intentarlo luego de 24 horas")
+            identificar = false
+            intentos = 1
+        }
+    }
 }
+
+function sumar(precios_carrito) {
+    precios_con_iva = precios_carrito.map(e => {
+        return e * 1.19
+    })
+    console.log(precios_con_iva)
+    const total = precios_con_iva.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+    return total
+}
+
+
 
 function comprar(precio) {
 
-    const carrito = []
     let comprar = confirm("¿Quieres comprarlo?")
 
     if (comprar === true) {
-        
+        precios.push(precio)
+        alert("Agregaste el producto")
     } else {
-        alert("Son " + precio + " pesos.")
-    }
-
-    comprar = confirm ("¿Desea seguir comprando?")
-
-    if (comprar === true) {
-        menu()
-    } else {
-        alert("Son " + precio + " pesos. Gracias por tu compra")
+        alert("Gracias por tu visita, nos vemos pronto")
     }
 
 }
 
-
-let lista = [producto1, producto2, producto3, producto4, producto5, producto6, producto7, producto8, producto9, producto10, producto11, producto12, producto13, producto14, producto15]
-console.log(lista[0].nombre)
-
-
-
 function menu() {
-    let aceiteEsencial = prompt('¿Qué Aceite ensencial deseas comprar?\n1. Wild Orange\n2. Tumeric\n3. Copaiba\n4. Lemon\n5. Clary Sage\n6. Cypress\n7.Fennel\n8. Frankincense\n9. Geranium\n10. Lavender\n11. Oregano\n12. Peppermint\n13. Rosemary\n14. Spearmint\n15. Tea tree')
+    let aceiteEsencial = prompt('¿Qué Aceite ensencial deseas comprar?\n0. ver total\n1. Wild Orange\n2. Tumeric\n3. Copaiba\n4. Lemon\n5. Clary Sage\n6. Cypress\n7.Fennel\n8. Frankincense\n9. Geranium\n10. Lavender\n11. Oregano\n12. Peppermint\n13. Rosemary\n14. Spearmint\n15. Tea tree')
 
     switch (aceiteEsencial) {
+        case 'ver total':
+            let total = sumar(precios)
+            alert("El total de tu compra es: " + total + ". ¡Gracias por tu compra!")
+            autenticado = false
+            break
         case lista[0].nombre:
             alert("Escogiste el Aceite esencial " + aceiteEsencial)
             comprar(14666)
@@ -124,30 +144,14 @@ function menu() {
     }
 }
 
-function autenticador() {
-    let usuario = prompt("Ingresa tu usuario:")
 
-    if (usuario === null || usuario === undefined) {
-        alert("El usuario está vacío")
-    }
-    if (usuario === "claudia rolack" && intentos <= 3) {
-        alert("Bienvenida " + usuario)
-        menu()
-    } else {
-        alert("No se reconoce al usuario: " + usuario)
-        intentos++
-        if (intentos > 3) {
-            alert("Vuelve a intentarlo luego de 24 horas")
-            identificar = false
-            intentos = 1
-        }
-    }
-}
 
 let intentos = 1
 let identificar = true
 
 alert("¡Bienvenido a Áurea Esencias!")
-do {
-    autenticador()
-} while (identificar)
+
+autenticador();
+while (autenticado) {
+    menu();
+}
